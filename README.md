@@ -1,5 +1,8 @@
+[Link Gitlab](https://gitlab.com/trungchanh.kda/BTL_KTTKPM)
+
 # KIẾN TRÚC VÀ THIẾT KẾ PHẦN MỀM
 # Hệ Thống Quản Lý Vé Xe
+![Mô hình kiến trúc hạ tầng MVC](https://github.com/trungchanh2002/BTL_KTTKPM/blob/main/images/Duy_Chanh_PP.png)
 
 ## Giới Thiệu
 Dự án "Hệ Thống Quản Lý Vé Xe" được phát triển nhằm mục đích cung cấp một giải pháp hiệu quả và tiện lợi cho việc mua bán và quản lý vé xe. Hệ thống này được thiết kế để phục vụ các doanh nghiệp vận tải và khách hàng cá nhân, giúp tự động hóa quy trình từ việc đăng ký, đăng nhập, mua vé, quản lý vé cho đến quản lý thông tin khách hàng và nhân viên.
