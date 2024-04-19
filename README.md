@@ -1,3 +1,4 @@
+[Link Gitlab](https://gitlab.com/trungchanh.kda/BTL_KTTKPM)
 
 # KIẾN TRÚC VÀ THIẾT KẾ PHẦN MỀM
 # Hệ Thống Quản Lý Vé Xe
