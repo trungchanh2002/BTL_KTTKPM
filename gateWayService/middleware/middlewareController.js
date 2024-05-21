@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const middleware = {
+  // Middleware kiểm tra token
   verifyToken: (req, res, next) => {
     const token = req.cookies["accessToken"];
-    // console.log(token);
     if (!token) {
       return res.status(401).json({ error: "Bạn cần Login" });
     }
@@ -19,6 +19,16 @@ const middleware = {
     } catch (error) {
       console.error(error);
       res.status(400).json({ error: "Invalid Token" });
+    }
+  },
+  // Middleware kiểm tra quyền truy cập Passengers
+  restrictAccess: (req, res, next) => {
+    const allowedPaths = ["/getAllPassengers", "/getPassengerById"];
+    const requestPath = req.path;
+    if (allowedPaths.includes(requestPath)) {
+      next();
+    } else {
+      res.status(403).json({ error: "Bạn không có quyền truy cập" });
     }
   },
 };

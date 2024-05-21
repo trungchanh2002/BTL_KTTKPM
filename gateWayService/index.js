@@ -6,10 +6,9 @@ const cookieParser = require("cookie-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 
-// import environment variables
 const ip = process.env.IP;
 const port = process.env.PORT;
-const mongodb = process.env.MONGODB_URI;
+const mongodb = process.env.MONGODB;
 
 const middleware = require("./middleware/middlewareController");
 const getaWayController = require("./Controller/getaWayController");
@@ -26,7 +25,14 @@ app.use("/service0/signup", getaWayController.signup);
 app.use(
   "/service1",
   middleware.verifyToken,
-  createProxyMiddleware({ target: "http://localhost:3001", changeOrigin: true })
+  middleware.restrictAccess,
+  createProxyMiddleware({
+    target: "http://localhost:3001/api/v1/passengers",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/service1": "",
+    },
+  })
 );
 app.use(
   "/service2",
@@ -50,5 +56,5 @@ app.use(
 );
 
 app.listen(port, () => {
-  console.log(`Server running on: http://${ip}:${port}/service0/login`);
+  console.log(`Server running on: http://localhost:3000/`);
 });
