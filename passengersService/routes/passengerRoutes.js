@@ -10,5 +10,6 @@ router.get("/getPassengerById/:id", passengerController.getPassengerById);
 router.post("/login", passengerController.login);
 // http://localhost:3001/api/v1/passengers/signup
 router.post("/signup", passengerController.signup);
-//API to update passenger details
+// http://localhost:3001/api/v1/passengers/deletePassenger/664c48537766b84903d71c38
+router.post("/deletePassenger/:id", passengerController.deletePassenger);
 module.exports = router;

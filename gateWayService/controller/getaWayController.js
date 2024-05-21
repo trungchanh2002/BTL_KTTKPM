@@ -13,6 +13,7 @@ const login = async (req, res) => {
       `http://localhost:3001/api/v1/passengers/login`,
       requestData
     );
+
     if (response.status === 200) {
       if (response.data) {
         const user = response.data;
@@ -36,37 +37,30 @@ const login = async (req, res) => {
           .json({ error: "User data is missing or invalid" });
       }
     } else {
-      // Nếu không thành công, trả về lỗi từ server khác
+      // If the login fails, return the error from the other server
       return res.status(response.status).json(response.data);
     }
   } catch (error) {
     console.error("Error:", error.message);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Sai tài khoản hoặc mật khẩu" });
   }
 };
 
 const signup = async (req, res) => {
-  const { name, username, password, email } = req.body;
+  const { username, password } = req.body;
   try {
     const requestData = {
-      name: "name",
       username: username,
       password: password,
-      email: "email",
     };
     const response = await axios.post(
       `http://localhost:3001/api/v1/passengers/signup`,
       requestData
     );
-    if (response.status === 201) {
-      const { message, newPassenger } = response.data;
-      return res.status(201).json({ message, newPassenger });
-    } else {
-      return res.status(response.status).json(response.data);
-    }
+    return res.status(response.status).json(response.data);
   } catch (error) {
     console.error("Error:", error.message);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Lỗi khi tạo tài khoản" });
   }
 };
 
