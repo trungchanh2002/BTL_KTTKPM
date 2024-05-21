@@ -6,6 +6,11 @@ const cookieParser = require("cookie-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 
+// import environment variables
+const ip = process.env.IP;
+const port = process.env.PORT;
+const mongodb = process.env.MONGODB_URI;
+
 const middleware = require("./middleware/middlewareController");
 const getaWayController = require("./Controller/getaWayController");
 const app = express();
@@ -44,6 +49,6 @@ app.use(
   createProxyMiddleware({ target: "http://localhost:3005", changeOrigin: true })
 );
 
-app.listen(3000, () => {
-  console.log("Server is running on PORT: " + 3000);
+app.listen(port, () => {
+  console.log(`Server running on: http://${ip}:${port}/service0/login`);
 });
