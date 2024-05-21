@@ -25,7 +25,22 @@ const getPassengerById = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const passenger = await Passenger.findOne({ username, password });
+    if (!passenger) {
+      return res.status(404).json({ error: "Invalid credentials" });
+    }
+    res.status(200).json(["Login successful", passenger]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = {
   getAllPassengers,
   getPassengerById,
+  login,
 };

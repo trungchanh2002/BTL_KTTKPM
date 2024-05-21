@@ -1,15 +1,15 @@
 // Tạo cơ sở dữ liệu Quản lý vé xe bus bus_ticket_management
 use("bus_ticket_management");
 
-// Passengers: Lưu trữ thông tin cá nhân của hành khách
+// 3001 Passengers: Lưu trữ thông tin cá nhân của hành khách
 db.createCollection("passengers");
-// Buses: Lưu trữ thông tin về các xe buýt như biển số, sức chứa, hãng sản xuất, mô hình, và năm sản xuất
+// 3002 Buses: Lưu trữ thông tin về các xe buýt như biển số, sức chứa, hãng sản xuất, mô hình, và năm sản xuất
 db.createCollection("buses");
-// Drivers: Lưu trữ thông tin về lái xe bao gồm tên, số giấy phép lái xe, số điện thoại, email, và địa chỉ
+// 3003 Drivers: Lưu trữ thông tin về lái xe bao gồm tên, số giấy phép lái xe, số điện thoại, email, và địa chỉ
 db.createCollection("drivers");
-// Routes: Lưu trữ thông tin về các tuyến đường như số hiệu, điểm bắt đầu, điểm kết thúc, khoảng cách, và thời gian dự kiến
+// 3004 Routes: Lưu trữ thông tin về các tuyến đường như số hiệu, điểm bắt đầu, điểm kết thúc, khoảng cách, và thời gian dự kiến
 db.createCollection("routes");
-// Tickets: Lưu trữ thông tin về vé như hành khách, xe buýt, tuyến đường, lái xe, số ghế, thời gian khởi hành, giá vé, và trạng thái
+// 3005 Tickets: Lưu trữ thông tin về vé như hành khách, xe buýt, tuyến đường, lái xe, số ghế, thời gian khởi hành, giá vé, và trạng thái
 db.createCollection("tickets");
 
 // Insert sample data
