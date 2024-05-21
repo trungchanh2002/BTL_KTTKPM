@@ -14,7 +14,7 @@ const port = process.env.PORT;
 const mongodb = process.env.MONGODB_URI;
 
 // routes
-const passengerRoutes = require("./routes/passengerRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
 
 // middleware
 app.use(express.static(path.join(__dirname, "public")));
@@ -32,7 +32,7 @@ mongoose
   });
 
 // routes
-app.use("/api/v1/passengers", passengerRoutes);
+app.use("/api/v1/tickets", ticketRoutes);
 app.use(function (req, res) {
   res.status(404).send("Not found");
 });
