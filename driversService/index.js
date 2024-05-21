@@ -14,7 +14,7 @@ const port = process.env.PORT;
 const mongodb = process.env.MONGODB_URI;
 
 // routes
-const passengerRoutes = require("./routes/passengerRoutes");
+const driverRoutes = require("./routes/driverRoutes");
 
 // middleware
 app.use(express.static(path.join(__dirname, "public")));
@@ -30,9 +30,8 @@ mongoose
   .catch((error) => {
     console.error("Connection failed:", error);
   });
-
 // routes
-app.use("/api/v1/passengers", passengerRoutes);
+app.use("/api/v1/drivers", driverRoutes);
 app.use(function (req, res) {
   res.status(404).send("Not found");
 });
