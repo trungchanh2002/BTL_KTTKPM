@@ -15,27 +15,19 @@ db.createCollection("tickets");
 // Insert sample data
 db.passengers.insertMany([
   {
-    // Tên người dùng (được sử dụng để đăng nhập)
-    username: "nguyenvana",
-    // Mật khẩu (được mã hóa)
+    username: "chanh",
     password: "123",
-    // Tên của hành khách
-    name: "Nguyen Van A",
-    // Email của hành khách
+    name: "Phan Lương Trung Chánh",
     email: "nguyenvana@example.com",
-    // Số điện thoại của hành khách
     phone: "0123456789",
-    // Địa chỉ của hành khách
     address: "123 Phan Dinh Phung, Hanoi",
-    // Ngày và giờ tạo bản ghi
     created_at: ISODate("2023-01-01T00:00:00Z"),
-    // Ngày và giờ cập nhật bản ghi lần cuối
     updated_at: ISODate("2023-01-01T00:00:00Z"),
   },
   {
-    username: "lethib",
+    username: "duy",
     password: "123",
-    name: "Le Thi B",
+    name: "Nguyen Minh Duy",
     email: "lethib@example.com",
     phone: "0987654321",
     address: "456 Tran Hung Dao, Ho Chi Minh City",
@@ -57,6 +49,11 @@ db.buses.insertMany([
     model: "Universe",
     // Năm sản xuất xe buýt
     year: 2018,
+    // Mảng chứa ID của các lái xe (liên kết tới Drivers)
+    drivers: [
+      ObjectId("60c72b4f9b1e8a5a2441d7a8"),
+      ObjectId("60c72b4f9b1e8a5a2441d7a3"),
+    ],
     // Ngày và giờ tạo bản ghi
     created_at: ISODate("2023-01-01T00:00:00Z"),
     // Ngày và giờ cập nhật bản ghi lần cuối
@@ -69,6 +66,10 @@ db.buses.insertMany([
     make: "Toyota",
     model: "Coaster",
     year: 2020,
+    drivers: [
+      ObjectId("60c72b4f9b1e8a5a2441d7a3"),
+      ObjectId("60c72b4f9b1e8a5a2441d7a8"),
+    ],
     created_at: ISODate("2023-01-02T00:00:00Z"),
     updated_at: ISODate("2023-01-02T00:00:00Z"),
   },
@@ -78,7 +79,7 @@ db.drivers.insertMany([
   {
     _id: ObjectId("60c72b4f9b1e8a5a2441d7a3"),
     // Tên của lái xe
-    name: "Tran Van B",
+    name: "Tran Van A",
     // Số giấy phép lái xe
     license_number: "123456789",
     // Số điện thoại của lái xe
@@ -94,7 +95,7 @@ db.drivers.insertMany([
   },
   {
     _id: ObjectId("60c72b4f9b1e8a5a2441d7a8"),
-    name: "Pham Thi C",
+    name: "Pham Thi B",
     license_number: "987654321",
     phone: "0912345678",
     email: "phamthic@example.com",
@@ -117,6 +118,10 @@ db.routes.insertMany([
     distance: 1700,
     // Thời gian dự kiến để hoàn thành tuyến đường (giờ)
     estimated_time: 30,
+    buses: [
+      ObjectId("60c72b3f9b1e8a5a2441d7a2"),
+      ObjectId("60c72b3f9b1e8a5a2441d7a7"),
+    ],
     // Ngày và giờ tạo bản ghi
     created_at: ISODate("2023-01-01T00:00:00Z"),
     // Ngày và giờ cập nhật bản ghi lần cuối
@@ -129,6 +134,10 @@ db.routes.insertMany([
     end_location: "Hue",
     distance: 100,
     estimated_time: 2,
+    buses: [
+      ObjectId("60c72b3f9b1e8a5a2441d7a2"),
+      ObjectId("60c72b3f9b1e8a5a2441d7a7"),
+    ],
     created_at: ISODate("2023-01-02T00:00:00Z"),
     updated_at: ISODate("2023-01-02T00:00:00Z"),
   },
@@ -139,11 +148,11 @@ db.tickets.insertMany([
     _id: ObjectId("60c72b6f9b1e8a5a2441d7a5"),
     // ID của hành khách (liên kết tới Passengers)
     passenger_id: ObjectId("60c72b2f9b1e8a5a2441d7a1"),
-    // ID của xe buýt (liên kết tới Buses)
+    // ID của các xe buýt (liên kết tới Buses)
     bus_id: ObjectId("60c72b3f9b1e8a5a2441d7a2"),
-    // ID của tuyến đường (liên kết tới Routes)
+    // ID của tuyến đường (liên kết tới Buses)
     route_id: ObjectId("60c72b5f9b1e8a5a2441d7a4"),
-    // ID của lái xe (liên kết tới Drivers)
+    // ID của các lái xe (liên kết tới Drivers)
     driver_id: ObjectId("60c72b4f9b1e8a5a2441d7a3"),
     // Số ghế của hành khách trên xe buýt
     seat_number: "A1",
@@ -162,7 +171,7 @@ db.tickets.insertMany([
     _id: ObjectId("60c72b6f9b1e8a5a2441d7aa"),
     passenger_id: ObjectId("60c72b2f9b1e8a5a2441d7a6"),
     bus_id: ObjectId("60c72b3f9b1e8a5a2441d7a7"),
-    route_id: ObjectId("60c72b5f9b1e8a5a2441d7a9"),
+    route_id: ObjectId("60c72b5f9b1e8a5a2441d7a4"),
     driver_id: ObjectId("60c72b4f9b1e8a5a2441d7a8"),
     seat_number: "B2",
     departure_time: ISODate("2023-01-11T10:00:00Z"),

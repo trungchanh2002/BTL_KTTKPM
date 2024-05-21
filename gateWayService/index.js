@@ -1,45 +1,49 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
-const app = express();
 const http = require("http");
-const server = http.createServer(app);
+const cookieParser = require("cookie-parser");
+const { createProxyMiddleware } = require("http-proxy-middleware");
+require("dotenv").config();
 
-// import environment variables
-const ip = process.env.IP;
-const port = process.env.PORT;
-const mongodb = process.env.MONGODB_URI;
+const middleware = require("./middleware/middlewareController");
+const getaWayController = require("./Controller/getaWayController");
+const app = express();
+app.use(cookieParser());
 
-// routes
-const passengerRoutes = require("./routes/passengerRoutes");
-
-// middleware
-app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(cors());
 
-// database connection
-mongoose
-  .connect(mongodb)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((error) => {
-    console.error("Connection failed:", error);
-  });
+//
+app.use("/service0/login", getaWayController.login);
+app.use("/service0/signup", getaWayController.signup);
 
-// routes
-app.use("/api/v1/passengers", passengerRoutes);
-app.use(function (req, res) {
-  res.status(404).send("Not found");
-});
+app.use(
+  "/service1",
+  middleware.verifyToken,
+  createProxyMiddleware({ target: "http://localhost:3001", changeOrigin: true })
+);
+app.use(
+  "/service2",
+  middleware.verifyToken,
+  createProxyMiddleware({ target: "http://localhost:3002", changeOrigin: true })
+);
+app.use(
+  "/service3",
+  middleware.verifyToken,
+  createProxyMiddleware({ target: "http://localhost:3003", changeOrigin: true })
+);
+app.use(
+  "/service4",
+  middleware.verifyToken,
+  createProxyMiddleware({ target: "http://localhost:3004", changeOrigin: true })
+);
+app.use(
+  "/service5",
+  middleware.verifyToken,
+  createProxyMiddleware({ target: "http://localhost:3005", changeOrigin: true })
+);
 
-// Bắt đầu server và lắng nghe các kết nối tới
-server.listen(port, ip, () => {
-  console.log("Server is running on IP: " + ip);
-  console.log("Server is running on PORT: " + port);
-  console.log("Server is running on DB: " + mongodb);
+app.listen(3000, () => {
+  console.log("Server is running on PORT: " + 3000);
 });
