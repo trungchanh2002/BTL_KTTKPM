@@ -25,7 +25,8 @@ const middleware = {
   restrictAccess: (req, res, next) => {
     const allowedPaths = ["/getAllPassengers", "/getPassengerById"];
     const requestPath = req.path;
-    if (allowedPaths.includes(requestPath)) {
+    const isGetPassengerById = requestPath.startsWith("/getPassengerById");
+    if (allowedPaths.includes(requestPath) || isGetPassengerById) {
       next();
     } else {
       res.status(403).json({ error: "Bạn không có quyền truy cập" });

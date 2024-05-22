@@ -4,7 +4,7 @@ const axios = require("axios");
 const app = express();
 const port = 3007;
 
-const duration = 5; // 5 giây
+const duration = 10; // 5 giây
 const points = 1; // 1 request
 
 // Tạo một instance rate limiter
@@ -21,7 +21,7 @@ const callApiWithRateLimiter = async (url, options) => {
   try {
     await rateLimiter.consume("api", 1);
     const response = await axios(url, options);
-    return response.data; // Trả về dữ liệu nếu thành công
+    return response.data;
   } catch (rateLimiterRes) {
     if (rateLimiterRes instanceof Error) {
       throw rateLimiterRes; // Nếu là lỗi thực sự, ném lỗi

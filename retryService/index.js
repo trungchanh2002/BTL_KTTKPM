@@ -23,18 +23,19 @@ const callApiWithRetry = async (url, options, retries = 5) => {
   }
 };
 
-// Endpoint lấy dữ liệu hành khách với cơ chế retry
-app.get("/getAllPassengersRetry", async (req, res) => {
-  const url = "http://localhost:3001/api/v1/passengers/getAllPassengers";
+// Middleware để áp dụng retry cho tất cả các API từ gateway
+app.use(async (req, res, next) => {
+  const gatewayUrl = "http://localhost:3000" + req.url;
+  console.log(`Retry: ${gatewayUrl}`);
   const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    method: req.method,
+    headers: req.headers,
+    data: req.body,
   };
   try {
-    const data = await callApiWithRetry(url, options);
+    const data = await callApiWithRetry(gatewayUrl, options);
     res.json(data);
+    console.log("Lấy dữ liệu thành công!");
   } catch (error) {
     res.status(500).json({ error: "Lấy dữ liệu thất bại!" });
   }
@@ -47,5 +48,4 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
-  console.log(`Retry API is running`);
 });
