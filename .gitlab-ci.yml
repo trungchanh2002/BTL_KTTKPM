@@ -5,33 +5,94 @@ variables:
 stages:
   - test
   - build
-  - deploy
 
-run_tests:
+# Khai báo biến dùng chung cho toàn bộ các bước
+variables:
+  NODE_ENV: test
+
+# Hàm cài đặt các gói cho một service
+.cache_install:
+  before_script:
+    - npm install
+
+# Hàm kiểm tra một service
+.test_template:
   stage: test
-  image: node:20-alpine # Sử dụng hình ảnh Docker node:20-alpine
-  before_script:
-    - npm install # Cài đặt các phụ thuộc của dự án (nếu có)
+  image: node:20-alpine
   script:
-    - npm test # Chạy các bài kiểm tra của dự án
+    - npm test
 
-.build:
+# Hàm build một service
+.build_template:
   stage: build
-  image: node:20-alpine # Sử dụng hình ảnh Docker node:20-alpine
-  before_script:
-    - npm install -g nodemon # Cài đặt nodemon toàn cục
-    - npm install # Cài đặt các phụ thuộc của dự án
+  image: node:20-alpine
   script:
-    - npm run build # Chạy lệnh build của dự án (nếu có)
-    - chmod -R 755 /the/workdir/path # Cấp quyền thực thi cho các tệp cần thiết (nếu có)
+    - npm run build
   variables:
     IMAGE_NAME: trungchanhdev/gitlab-cicd-app
   after_script:
-    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS # Đăng nhập vào Docker Registry
-    - docker build -t $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA . # Xây dựng hình ảnh Docker với tên và phiên bản cụ thể
-    - docker push $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA # Đẩy hình ảnh Docker lên Docker Registry
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA .
+    - docker push $IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA
 
-build-dev:
-  extends: .build
+# Khai báo các bước test cho từng service
+test_busesService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd busesService
+    - npm install
+    - npm test
+
+test_driversService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd driversService
+    - npm install
+    - npm test
+
+test_gateWayService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd gateWayService
+    - npm install
+    - npm test
+
+# Khai báo các bước build cho từng service
+build_busesService:
+  extends:
+    - .build_template
+    - .cache_install
+  script:
+    - cd busesService
+    - npm install
+    - npm run build
+  only:
+    - main
+
+build_driversService:
+  extends:
+    - .build_template
+    - .cache_install
+  script:
+    - cd driversService
+    - npm install
+    - npm run build
+  only:
+    - main
+
+build_gateWayService:
+  extends:
+    - .build_template
+    - .cache_install
+  script:
+    - cd gateWayService
+    - npm install
+    - npm run build
   only:
     - main
