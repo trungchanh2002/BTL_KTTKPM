@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const port = 3006;
+require("dotenv").config();
+
+const ip = process.env.IP;
+const port = process.env.PORT;
 
 // Hàm delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,7 +28,7 @@ const callApiWithRetry = async (url, options, retries = 5) => {
 
 // Middleware để áp dụng retry cho tất cả các API từ gateway
 app.use(async (req, res, next) => {
-  const gatewayUrl = "http://localhost:3000" + req.url;
+  const gatewayUrl = `http://${ip}:3000` + req.url;
   console.log(`Retry: ${gatewayUrl}`);
   const options = {
     method: req.method,
@@ -37,7 +40,7 @@ app.use(async (req, res, next) => {
     res.json(data);
     console.log("Lấy dữ liệu thành công!");
   } catch (error) {
-    res.status(500).json({ error: "Lấy dữ liệu thất bại!" });
+    res.status(500).json({ error: "Lấy dữ liệu không thành công!" });
   }
 });
 
@@ -47,5 +50,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on: ${ip}:${port}`);
 });

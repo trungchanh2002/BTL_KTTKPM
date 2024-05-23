@@ -12,6 +12,20 @@ services:
     restart: always
     ports:
       - "6379:6379"
+#Retry
+  retry-service:
+    container_name: retry-service
+    build:
+      context: ./retryService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: gateway-service
+      PORT: "3006"
+    ports:
+      - "3006:3006"
+    depends_on:
+      - mongodb
 #API gate way service
   gateway-service:
     container_name: gateway-service
