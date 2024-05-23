@@ -1,0 +1,122 @@
+services:
+#MongoDB
+  mongodb:
+    container_name: mongodb-service
+    image: mongodb/mongodb-enterprise-server:latest
+    ports:
+      - "27017:27017"
+#Redis
+  redis:
+    container_name: redis-service
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+#Retry
+  retry-service:
+    container_name: retry-service
+    build:
+      context: ./retryService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: gateway-service
+      PORT: "3006"
+    ports:
+      - "3006:3006"
+    depends_on:
+      - mongodb
+#API gate way service
+  gateway-service:
+    container_name: gateway-service
+    restart: on-failure
+    build:
+      context: ./gateWayService
+      dockerfile: Dockerfile
+    environment:
+      IP: gateway-service
+      PORT: "3000"
+      JWT_ACCESS_KEY: "chanh2002"
+      PASSENGERS_URL: "http://passengers-service:3001"
+      BUSES_URL: "http://buses-service:3002"
+      DRIVERS_URL: "http://drivers-service:3003"
+      ROUTES: "http://routes-service:3004"
+      TICKETS_URL: "http://tickers-service:3005"
+      REDIS_HOST: redis
+    ports:
+      - "3000:3000"
+    depends_on:
+      - passengers-service
+      - buses-service
+#Passengers Service
+  passengers-service:
+    container_name: passengers-service
+    build:
+      context: ./passengersService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: passengers-service
+      PORT: "3001"
+      JWT_ACCESS_KEY: "chanh2002"
+      REDIS_HOST: redis
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+#Buses Service
+  buses-service:
+    container_name: buses-service
+    build: 
+      context: ./busesService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: buses-service  
+      PORT: "3002"
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+#Drvier Service
+  drivers-service:
+    container_name: drivers-service
+    build: 
+      context: ./driversService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: drivers-service  
+      PORT: "3003"
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mongodb
+#Routes Service
+  routes-service:
+    container_name: routes-service
+    build: 
+      context: ./routesService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: routes-service  
+      PORT: "3004"
+    ports:
+      - "3004:3004"
+    depends_on:
+      - mongodb
+#Tickets Service
+  tickets-service:
+    container_name: tickets-service
+    build: 
+      context: ./ticketsService
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
+      IP: tickets-service  
+      PORT: "3005"
+    ports:
+      - "3005:3005"
+    depends_on:
+      - mongodb
