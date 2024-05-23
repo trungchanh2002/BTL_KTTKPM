@@ -1,5 +1,3 @@
-version: "3"
-# DefineS
 services:
 #MongoDB
   mongodb:
@@ -95,14 +93,14 @@ services:
     depends_on:
       - mongodb
 #Tickets Service
-  tickers-service:
-    container_name: tickers-service
+  tickets-service:
+    container_name: tickets-service
     build: 
-      context: ./tickersService
+      context: ./ticketsService
       dockerfile: Dockerfile
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
-      IP: tickers-service  
+      IP: tickets-service  
       PORT: "3005"
     ports:
       - "3005:3005"
