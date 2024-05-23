@@ -1,0 +1,37 @@
+variables:
+  IMAGE_NAME: trungchanhdev/gitlab-cicd-app
+  IMAGE_TAG: demo-cicd-app
+
+stages:
+  - test
+  - build
+  - deploy
+
+run_tests:
+  stage: test
+  image: node:20-alpine # Sử dụng hình ảnh Docker node:20-alpine
+  before_script:
+    - npm install # Cài đặt các phụ thuộc của dự án (nếu có)
+  script:
+    - npm test # Chạy các bài kiểm tra của dự án
+
+.build:
+  stage: build
+  image: node:20-alpine # Sử dụng hình ảnh Docker node:20-alpine
+  before_script:
+    - npm install -g nodemon # Cài đặt nodemon toàn cục
+    - npm install # Cài đặt các phụ thuộc của dự án
+  script:
+    - npm run build # Chạy lệnh build của dự án (nếu có)
+    - chmod -R 755 /the/workdir/path # Cấp quyền thực thi cho các tệp cần thiết (nếu có)
+  variables:
+    IMAGE_NAME: trungchanhdev/gitlab-cicd-app
+  after_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS # Đăng nhập vào Docker Registry
+    - docker build -t $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA . # Xây dựng hình ảnh Docker với tên và phiên bản cụ thể
+    - docker push $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA # Đẩy hình ảnh Docker lên Docker Registry
+
+build-dev:
+  extends: .build
+  only:
+    - main
