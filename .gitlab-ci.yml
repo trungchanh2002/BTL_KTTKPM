@@ -21,9 +21,9 @@ stages:
 # Hàm build một service
 .build_template:
   stage: build
-  image: docker:20.18.16
+  image: docker:20.10.16
   services:
-    - docker:docker:20.18.16-dind
+    - docker:docker:20.10.16-dind
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
