@@ -6,10 +6,6 @@ stages:
   - test
   - build
 
-# Khai báo biến dùng chung cho toàn bộ các bước
-variables:
-  NODE_ENV: test
-
 # Hàm cài đặt các gói cho một service
 .cache_install:
   before_script:
@@ -25,15 +21,16 @@ variables:
 # Hàm build một service
 .build_template:
   stage: build
-  image: node:20-alpine
-  script:
-    - npm run build
+  image: docker:20.18.16
+  services:
+    - docker:docker:20.18.16-dind
   variables:
-    IMAGE_NAME: trungchanhdev/gitlab-cicd-app
-  after_script:
-    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
-    - docker build -t $IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA .
-    - docker push $IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  script:
+    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
+    - docker push "$IMAGE_NAME:$IMAGE_TAG"
 
 # Khai báo các bước test cho từng service
 test_busesService:
@@ -56,7 +53,3 @@ build_busesService:
     - npm run build
   only:
     - main
-
-
-
-
