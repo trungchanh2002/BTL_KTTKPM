@@ -1,16 +1,15 @@
 const express = require("express");
+const app = express();
 require("dotenv").config();
 const cors = require("cors");
-const http = require("http");
 const cookieParser = require("cookie-parser");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-require("dotenv").config();
+const httpProxy = require("http-proxy");
+const bodyParser = require("body-parser");
 const rateLimit = require("express-rate-limit");
-const middleware = require("./middleware/middlewareController");
-const getaWayController = require("./Controller/getaWayController");
+const middleware = require("./middleware/middlewareController.js");
+const proxy = httpProxy.createProxyServer();
 const ip = process.env.IP;
 const port = process.env.PORT;
-const mongodb = process.env.MONGODB;
 
 const limiter = rateLimit({
   windowMs: 10 * 1000, // Thời gian khóa
@@ -23,48 +22,45 @@ const limiter = rateLimit({
   },
 });
 
-const app = express();
+// Middleware setup
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-//
-app.use("/service0/login", getaWayController.login);
-app.use("/service0/signup", getaWayController.signup);
-app.use(
-  "/service1",
-  limiter,
-  middleware.verifyToken,
-  middleware.restrictAccess,
-  createProxyMiddleware({
-    target: "http://localhost:3001/api/v1/passengers",
-    changeOrigin: true,
-    pathRewrite: {
-      "^/service1": "",
-    },
-  })
-);
-app.use(
-  "/service2",
-  middleware.verifyToken,
-  createProxyMiddleware({ target: "http://localhost:3002", changeOrigin: true })
-);
-app.use(
-  "/service3",
-  middleware.verifyToken,
-  createProxyMiddleware({ target: "http://localhost:3003", changeOrigin: true })
-);
-app.use(
-  "/service4",
-  middleware.verifyToken,
-  createProxyMiddleware({ target: "http://localhost:3004", changeOrigin: true })
-);
-app.use(
-  "/service5",
-  middleware.verifyToken,
-  createProxyMiddleware({ target: "http://localhost:3005", changeOrigin: true })
-);
+// Proxy error handling
+const handleProxyError = (err, req, res, target) => {
+  console.error(`Error forwarding request to ${target}: ${err.message}`);
+  res.status(500).send("Internal Server Error");
+};
+
+app.use("/service1", limiter, middleware.verifyToken, (req, res) => {
+  proxy.web(req, res, { target: process.env.PASSENGERS_URL }, (err) =>
+    handleProxyError(err, req, res, process.env.PASSENGERS_URL)
+  );
+});
+app.use("/service2", middleware.verifyToken, (req, res) => {
+  proxy.web(req, res, { target: process.env.BUSES_URL }, (err) =>
+    handleProxyError(err, req, res, process.env.BUSES_URL)
+  );
+});
+app.use("/service3", middleware.verifyToken, (req, res) => {
+  proxy.web(req, res, { target: process.env.DRIVERS_URL }, (err) =>
+    handleProxyError(err, req, res, process.env.DRIVERS_URL)
+  );
+});
+app.use("/service4", middleware.verifyToken, (req, res) => {
+  proxy.web(req, res, { target: process.env.ROUTES }, (err) =>
+    handleProxyError(err, req, res, process.env.ROUTES)
+  );
+});
+app.use("/service5", middleware.verifyToken, (req, res) => {
+  proxy.web(req, res, { target: process.env.TICKETS_URL }, (err) =>
+    handleProxyError(err, req, res, process.env.TICKETS_URL)
+  );
+});
 
 app.listen(port, () => {
-  console.log(`Server running on: http://localhost:${port}/`);
+  console.log(`Server is running on: ${ip}:${port}`);
 });

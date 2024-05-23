@@ -1,13 +1,16 @@
 const redis = require("redis");
+const redisHost = process.env.REDIS_HOST || "127.0.0.1";
+const redisPort = process.env.REDIS_PORT || 6379;
 
+console.log("Redis Host:", redisHost);
 const client = redis.createClient({
-  host: process.env.REDIS_HOST,
+  url: `redis://${redisHost}:${redisPort}`,
 });
 
 (async () => {
   try {
     await client.connect();
-    console.log("Kết nối thành công Redis");
+    console.log("Redis connected!");
   } catch (error) {
     console.error("Failed to connect to Redis:", error);
     process.exit(1);
@@ -15,7 +18,7 @@ const client = redis.createClient({
 })();
 
 client.on("connect", () => {
-  console.log("Đang kết nối Redis...");
+  console.log("Connected to Redis!");
 });
 
 client.on("error", (err) => {
