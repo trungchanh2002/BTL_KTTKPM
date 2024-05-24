@@ -37,6 +37,8 @@ test_passengersService:
     - cd passengersService
     - npm install
     - npm test
+  only:
+    - main
 test_busesService:
   extends:
     - .test_template
@@ -44,6 +46,8 @@ test_busesService:
     - cd busesService
     - npm install
     - npm test
+  only:
+    - main
 test_driversService:
   extends:
     - .test_template
@@ -51,6 +55,8 @@ test_driversService:
     - cd driversService
     - npm install
     - npm test
+  only:
+    - main
 test_routesService:
   extends:
     - .test_template
@@ -58,6 +64,8 @@ test_routesService:
     - cd routesService
     - npm install
     - npm test
+  only:
+    - main
 test_ticketsService:
   extends:
     - .test_template
@@ -65,6 +73,8 @@ test_ticketsService:
     - cd ticketsService
     - npm install
     - npm test
+  only:
+    - main
 # Khai báo các bước build cho từng service
 build_passengersService:
   extends:

@@ -1,58 +1,72 @@
-[Link Gitlab](https://gitlab.com/trungchanh.kda/BTL_KTTKPM)
+# Hệ Thống Quản Lý và Bán Vé Xe Bus
 
-# KIẾN TRÚC VÀ THIẾT KẾ PHẦN MỀM
-# Hệ Thống Quản Lý Vé Xe
 ![Mô hình kiến trúc hạ tầng MVC](https://github.com/trungchanh2002/BTL_KTTKPM/blob/main/images/Duy_Chanh_PP.png)
 
 ## Giới Thiệu
-Dự án "Hệ Thống Quản Lý Vé Xe" được phát triển nhằm mục đích cung cấp một giải pháp hiệu quả và tiện lợi cho việc mua bán và quản lý vé xe. Hệ thống này được thiết kế để phục vụ các doanh nghiệp vận tải và khách hàng cá nhân, giúp tự động hóa quy trình từ việc đăng ký, đăng nhập, mua vé, quản lý vé cho đến quản lý thông tin khách hàng và nhân viên.
+
+Dự án "Hệ Thống Quản Lý và Bán Vé Xe Bus" là một nền tảng phục vụ việc quản lý và bán vé xe bus trực tuyến. Dự án này được thiết kế để cung cấp giải pháp tự động và tiện lợi cho quá trình mua bán vé, cũng như quản lý thông tin về hành khách, tuyến đường, xe bus và tài xế.
 
 ## Thành Viên Dự Án
+
 - Phan Lương Trung Chánh
 - Nguyễn Minh Duy
 
 ## Kiến Trúc Hệ Thống
-Hệ thống bao gồm các service chính sau đây, được triển khai dựa trên kiến trúc microservices:
 
-### 1. `api-gateway`
-Gateway chính của hệ thống, điều phối các yêu cầu đến các service khác. Là điểm tiếp nhận duy nhất từ phía người dùng và phân phối các yêu cầu tương ứng tới các service phù hợp.
+Hệ thống được xây dựng dựa trên kiến trúc microservices và bao gồm các service sau:
 
-### 2. `customer`
-Service quản lý thông tin khách hàng, bao gồm đăng ký, cập nhật thông tin cá nhân và xem lịch sử mua vé.
+### 1. `passengers-service`
 
-### 3. `discovery-service`
-Service phục vụ việc khám phá và đăng ký các microservices khác. Sử dụng Eureka Server hoặc một giải pháp tương tự để quản lý các instance của service trong hệ thống.
+Service quản lý thông tin hành khách, bao gồm đăng ký, cập nhật thông tin cá nhân và xem lịch sử mua vé.
 
-### 4. `jwt`
-Service này cung cấp các chức năng liên quan đến xác thực và phát hành JSON Web Tokens (JWT) để bảo mật các yêu cầu giữa client và server.
+### 2. `buses-service`
 
-### 5. `login-service`
-Xử lý chức năng đăng nhập cho hệ thống, bao gồm xác thực thông tin người dùng và phát hành token cho các phiên đăng nhập thành công.
+Service quản lý thông tin về các xe bus, bao gồm các thông tin về loại xe, số hiệu xe, và trạng thái hoạt động.
 
-### 6. `rateLimiter`
-Service được thiết kế để hạn chế tần suất yêu cầu đến từ một nguồn cụ thể, giúp tránh quá tải hệ thống và tấn công DOS.
+### 3. `drivers-service`
 
-### 7. `register-service`
-Quản lý việc đăng ký người dùng mới vào hệ thống, bao gồm xác minh thông tin và kích hoạt tài khoản.
+Service quản lý thông tin về tài xế, bao gồm thông tin cá nhân và lịch trình lái xe.
 
-### 8. `staff`
-Service quản lý thông tin và các nhiệm vụ của nhân viên vận tải, từ việc cập nhật thông tin cá nhân đến quản lý lịch trình công tác và các phân quyền trong hệ thống.
+### 4. `routes-service`
 
-### 9. `ticket`
-Service quản lý việc tạo và lưu trữ vé, cho phép khách hàng mua và truy xuất vé điện tử.
+Service quản lý thông tin về các tuyến đường, bao gồm điểm xuất phát và điểm đến, thời gian di chuyển dự kiến và khoảng cách.
 
-### 10. `ticketManagement`
-Service này cung cấp các chức năng quản lý vé chi tiết, bao gồm thay đổi, hủy vé và theo dõi tình trạng sử dụng vé.
+### 5. `tickets-service`
 
-## Công Nghệ Sử Dụng
-- Spring Boot: Để phát triển các microservices.
-- Spring Cloud: Cho các chức năng discovery và configuration.
-- MariaDB: Lưu trữ dữ liệu người dùng, vé, và các thông tin khác.
-- RabbitMQ/Kafka: Để xử lý các yêu cầu bất đồng bộ giữa các services.
-- Docker/Kubernetes: Để đóng gói và triển khai hệ thống.
+Service quản lý quá trình bán vé, bao gồm tạo vé, lưu trữ thông tin vé và xác nhận thanh toán.
+
+### 6. `mongodb-service`
+
+Service quản lý lưu trữ dữ liệu sử dụng MongoDB.
+
+### 7. `redis-service`
+
+Service quản lý cache sử dụng Redis để tối ưu hóa hiệu suất của hệ thống.
+
+### 8. `retry-service`
+
+Service quản lý việc thực hiện retry khi xảy ra lỗi trong quá trình giao tiếp giữa các service.
+
+### 9. `gateway-service`
+
+Gateway chính của hệ thống, điều phối các yêu cầu đến các service tương ứng.
+
+## Công Nghệ và Công Cụ Sử Dụng
+
+- Node.js: Sử dụng để phát triển các service backend.
+- JWT (JSON Web Tokens): Sử dụng để xác thực và bảo mật các yêu cầu giữa client và server.
+- Redis: Sử dụng để quản lý cache.
+- Rate Limiter: Sử dụng để hạn chế tần suất yêu cầu đến từ một nguồn cụ thể.
+- Docker: Sử dụng để đóng gói và triển khai các service trong một môi trường độc lập.
+- Docker Compose: Sử dụng để quản lý và chạy đồng thời nhiều container Docker.
+- Jenkins và GitLab CI/CD: Sử dụng để tự động hóa quy trình triển khai và kiểm thử.
+- Agile-Scrum: Sử dụng phương pháp Agile và Scrum trong quản lý dự án.
 
 ## Cài Đặt Và Chạy Thử
-Mỗi service có thể được cài đặt và chạy riêng rẽ. Chi tiết về cài đặt và các yêu cầu hệ thống sẽ được cung cấp trong tài liệu từng service cụ thể.
+
+Mỗi service có thể được cài đặt và chạy độc lập. Chi tiết về cài đặt và yêu cầu hệ thống sẽ được cung cấp trong tài liệu của từng service cụ thể.
 
 ## Lưu Ý
-Đảm bảo rằng tất cả các service cần thiết đều đang chạy trước khi bắt đầu sử dụng hệ thống.
+
+- Đảm bảo rằng tất cả các service cần thiết đều đang chạy trước khi sử dụng hệ thống.
+- Hãy tuân thủ các quy trình Agile và Scrum trong quá trình phát triển và quản lý dự án.
