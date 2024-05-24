@@ -1,4 +1,8 @@
 # Khai báo các biến môi trường
+image: docker/compose:1.29.2
+services:
+  - docker:dind
+# Khai báo các biến môi trường
 variables:
   IMAGE_NAME: trungchanhdev/gitlab-cicd-app
   TAG_NAME: demo-app
@@ -7,21 +11,21 @@ variables:
 stages:
   - test
   - build
+  - push
   - deploy
+before_script:
+  - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
 # Hàm kiểm tra một service
 .test_template:
   stage: test
   image: node:20-alpine
-  script:
-    - npm test
 # Hàm build một service
 .build_template:
   stage: build
   image: docker:stable
   services:
     - docker:dind
-  before_script:
-    - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
+
 .deploy_template:
   stage: deploy
   image: docker:stable
@@ -84,105 +88,15 @@ test_gateWayService:
     - npm test
   only:
     - chanh
-# Khai báo các bước build cho từng service
-build_passengersService:
-  extends:
-    - .build_template
+buid_all_services:
+  stage: build
   script:
-    - cd passengersService
-    - docker build -t $IMAGE_NAME:passengersService .
-    - docker push $IMAGE_NAME:passengersService
-  only:
-    - chanh
-build_busesService:
-  extends:
-    - .build_template
+    - docker-compose -f "docker-compose.yaml" up -d --build
+push_all_services:
+  stage: push
   script:
-    - cd busesService
-    - docker build -t $IMAGE_NAME:busesService .
-    - docker push $IMAGE_NAME:busesService
-  only:
-    - chanh
-build_driversService:
-  extends:
-    - .build_template
-  script:
-    - cd driversService
-    - docker build -t $IMAGE_NAME:driversService .
-    - docker push $IMAGE_NAME:driversService
-  only:
-    - chanh
-build_routesService:
-  extends:
-    - .build_template
-  script:
-    - cd routesService
-    - docker build -t $IMAGE_NAME:routesService .
-    - docker push $IMAGE_NAME:routesService
-  only:
-    - chanh
-build_ticketsService:
-  extends:
-    - .build_template
-  script:
-    - cd ticketsService
-    - docker build -t $IMAGE_NAME:ticketsService .
-    - docker push $IMAGE_NAME:ticketsService
-  only:
-    - chanh
-build_gateWayService:
-  extends:
-    - .build_template
-  script:
-    - cd gateWayService
-    - docker build -t $IMAGE_NAME:gateWayService .
-    - docker push $IMAGE_NAME:gateWayService
-  only:
-    - chanh
-# Khai báo các bước deploy cho từng service
-deploy_passengersService:
-  extends:
-    - .deploy_template
-  script:
-    - cd passengersService
-    # - docker pull $IMAGE_NAME:passengersService
-    # - docker run -d -p 80:80 $IMAGE_NAME:passengersService
-  only:
-    - chanh
-deploy_busesService:
-  extends:
-    - .deploy_template
-  script:
-    - cd busesService
-  only:
-    - chanh
-deploy_driversService:
-  extends:
-    - .deploy_template
-  script:
-    - cd driversService
-    # - docker pull $IMAGE_NAME:driversService
-    # - docker run -d -p 80:80 $IMAGE_NAME:driversService
-  only:
-    - chanh
-deploy_routesService:
-  extends:
-    - .deploy_template
-  script:
-    - cd routesService
-  only:
-    - chanh
-deploy_ticketsService:
-  extends:
-    - .deploy_template
-  script:
-    - cd ticketsService
-  only:
-    - chanh
-deploy_gateWayService:
-  extends:
-    - .deploy_template
-  script:
-    - cd gateWayService
-  only:
-    - chanh
+    - docker tag mongodb/mongodb-enterprise-server:latest trungchanhdev/gitlab-cicd-app:mongodb
+    - docker push trungchanhdev/gitlab-cicd-app:mongodb
+    - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
+    - docker push trungchanhdev/gitlab-cicd-app:redis
+    - docker-compose -f "docker-compose.yaml" push

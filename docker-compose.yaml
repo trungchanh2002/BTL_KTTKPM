@@ -33,6 +33,7 @@ services:
     build:
       context: ./gateWayService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:gateway-service
     environment:
       IP: gateway-service
       PORT: "3000"
@@ -54,6 +55,7 @@ services:
     build:
       context: ./passengersService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:passengers-service
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
       IP: passengers-service
@@ -70,6 +72,7 @@ services:
     build: 
       context: ./busesService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:buses-service
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
       IP: buses-service  
@@ -84,6 +87,7 @@ services:
     build: 
       context: ./driversService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:drivers-service
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
       IP: drivers-service  
@@ -98,6 +102,7 @@ services:
     build: 
       context: ./routesService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:routes-service
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
       IP: routes-service  
@@ -112,6 +117,7 @@ services:
     build: 
       context: ./ticketsService
       dockerfile: Dockerfile
+    image: trungchanhdev/gitlab-cicd-app:tickets-service
     environment:
       MONGODB_URI: "mongodb+srv://trungchanhkda:Trungchanh2024@cluster0.qnwaqfw.mongodb.net/bus_ticket_management?retryWrites=true&w=majority&appName=Cluster0"
       IP: tickets-service  

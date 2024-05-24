@@ -15,6 +15,3 @@ RUN chmod -R 755 /the/workdir/path
 EXPOSE 3001
 # Chạy ứng dụng
 CMD ["nodemon", "index.js"]
-
-# docker build --tag car-docker . 
-# docker run -p 3001:3001 -d car-docker
