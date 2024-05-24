@@ -18,12 +18,9 @@ pipeline {
                 stage('Build Drivers Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                sh 'cd driversService && docker build -t $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd driversService && docker build -t ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
@@ -31,12 +28,9 @@ withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') 
                 stage('Build Passengers Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                sh 'cd pasengersService && docker build -t $PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd passengersService && docker build -t ${env.PASSENGERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.PASSENGERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
@@ -44,12 +38,9 @@ withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') 
                 stage('Build Buses Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
                             withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                     // some block
-                                sh 'cd busesService && docker build -t $BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG'
-                               
+                                sh "cd busesService && docker build -t ${env.BUSES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.BUSES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
@@ -57,40 +48,29 @@ withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') 
                 stage('Build Routes Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                sh 'cd routesService && docker build -t $ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd routesService && docker build -t ${env.ROUTES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.ROUTES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
                 }
-                
                 stage('Build Tickets Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-                                sh 'cd ticketsService && docker build -t $TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd ticketsService && docker build -t ${env.TICKETS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.TICKETS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
                 }
-                
-                
                 stage('Build Gateway Service') {
                     steps {
                         script {
-                           // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                sh 'cd gateWayService && docker build -t $GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd gatewayService && docker build -t ${env.GATEWAY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.GATEWAY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
@@ -98,12 +78,9 @@ withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') 
                 stage('Build Retry Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                sh 'cd retryService && docker build -t $RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                                sh 'docker push $RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG'
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                sh "cd retryService && docker build -t ${env.RETRY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                                sh "docker push ${env.RETRY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                             }
                         }
                     }
