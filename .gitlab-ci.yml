@@ -1,16 +1,13 @@
 variables:
   IMAGE_NAME: trungchanhdev/gitlab-cicd-app
-  IMAGE_TAG: demo-cicd-app
   DOCKER_HOST: tcp://docker:2375/
-
 stages:
   - test
   - build
-
 # Hàm cài đặt các gói cho một service
 .cache_install:
   before_script:
-    - npm install
+    # - npm install
 
 # Hàm kiểm tra một service
 .test_template:
@@ -18,7 +15,6 @@ stages:
   image: node:20-alpine
   script:
     - npm test
-
 # Hàm build một service
 .build_template:
   stage: build
@@ -27,7 +23,16 @@ stages:
     - docker:dind
   before_script:
     - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
+
 # Khai báo các bước test cho từng service
+test_passengerService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd passengerService
+    - npm install
+    - npm test
 test_busesService:
   extends:
     - .test_template
@@ -36,14 +41,54 @@ test_busesService:
     - cd busesService
     - npm install
     - npm test
-
+test_driverService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd driverService
+    - npm install
+    - npm test
+test_routesService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd routesService
+    - npm install
+    - npm test
+test_ticketsService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd ticketsService
+    - npm install
+    - npm test
+test_gateWayService:
+  extends:
+    - .test_template
+    - .cache_install
+  script:
+    - cd gateWayService
+    - npm install
+    - npm test
 # Khai báo các bước build cho từng service
+build_passengerService:
+  extends:
+    - .build_template
+  script:
+    - cd passengerService
+    - docker build -t $IMAGE_NAME:passengerService .
+    - docker push $IMAGE_NAME:passengerService
+  only:
+    - main
 build_busesService:
   extends:
     - .build_template
   script:
     - cd busesService
-    - docker build -t trungchanhdev/gitlab-cicd-app:latest .
-    - docker push trungchanhdev/gitlab-cicd-app:latest
+    - docker build -t $IMAGE_NAME:busesSservice .
+    - docker push $IMAGE_NAME:busesSservice
   only:
     - main
