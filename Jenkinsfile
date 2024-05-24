@@ -10,9 +10,6 @@ pipeline {
         GATEWAY_SERVICE_IMAGE_NAME = 'btl_kttkpm-gateway-service'
         RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
-        DOCKER_HUB_CREDS_ID = 'dockerhub'
-        DOCKER_USERNAME = 'duy19102018@gmail.com'
-        DOCKER_PASSWORD = '0793427848Duyne'
     }
     
     stages {   
@@ -21,7 +18,10 @@ pipeline {
                 stage('Build Buses Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                     // some block
+                
                                 docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
                             }
                         }
@@ -30,7 +30,10 @@ pipeline {
                 stage('Build Drivers Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
+
                                 docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
                             }
                         }
@@ -39,7 +42,9 @@ pipeline {
                 stage('Build Tickets Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
                                 docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
                             }
                         }
@@ -48,7 +53,10 @@ pipeline {
                 stage('Build Routes Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
+
                                 docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
                             }
                         }
@@ -57,7 +65,10 @@ pipeline {
                 stage('Build Passengers Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
+
                                 docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
                             }
                         }
@@ -66,7 +77,10 @@ pipeline {
                 stage('Build Gateway Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                           // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
+
                                 docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
                             }
                         }
@@ -75,7 +89,10 @@ pipeline {
                 stage('Build Retry Service') {
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDS_ID, usernameVariable: DOCKER_USERNAME, passwordVariable: DOCKER_PASSWORD)]) {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+    // some block
+
                                 docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
                             }
                         }
