@@ -7,6 +7,7 @@ variables:
   IMAGE_NAME: trungchanhdev/gitlab-cicd-app
   TAG_NAME: demo-app
   DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
 # Cac stage chinh
 stages:
   - test
@@ -25,14 +26,11 @@ before_script:
   image: docker:stable
   services:
     - docker:dind
-
 .deploy_template:
   stage: deploy
   image: docker:stable
   services:
     - docker:dind
-  before_script:
-    - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
 # Khai báo các bước test cho từng service
 test_passengersService:
   extends:
@@ -92,7 +90,7 @@ buid_all_services:
   stage: build
   script:
     - docker-compose -f "docker-compose.yaml" up -d --build
-   only:
+  only:
     - chanh
 push_all_services:
   stage: push
@@ -102,5 +100,5 @@ push_all_services:
     - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
     - docker push trungchanhdev/gitlab-cicd-app:redis
     - docker-compose -f "docker-compose.yaml" push
-   only:
+  only:
     - chanh
