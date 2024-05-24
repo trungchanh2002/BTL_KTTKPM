@@ -127,7 +127,35 @@ deploy_passengersService:
     - .deploy_template
   script:
     - cd passengersService
-    - docker pull $IMAGE_NAME:passengersService
-    - docker run -d -p 80:80 $IMAGE_NAME:passengersService
+    # - docker pull $IMAGE_NAME:passengersService
+    # - docker run -d -p 80:80 $IMAGE_NAME:passengersService
+  only:
+    - main
+deploy_busesService:
+  extends:
+    - .deploy_template
+  script:
+    - cd busesService
+  only:
+    - main
+deploy_driversService:
+  extends:
+    - .deploy_template
+  script:
+    - cd driversService
+  only:
+    - main
+deploy_routesService:
+  extends:
+    - .deploy_template
+  script:
+    - cd routesService
+  only:
+    - main
+deploy_ticketsService:
+  extends:
+    - .deploy_template
+  script:
+    - cd ticketsService
   only:
     - main
