@@ -10,9 +10,6 @@ pipeline {
         GATEWAY_SERVICE_IMAGE_NAME = 'btl_kttkpm-gateway-service'
         RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
-        DOCKER_HUB_CREDS_ID = 'dockerhub'
-        DOCKER_USERNAME = 'duy19102018@gmail.com'
-        DOCKER_PASSWORD = '0793427848Duyne'
     }
     
     stages {   
