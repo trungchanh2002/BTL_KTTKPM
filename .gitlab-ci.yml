@@ -111,7 +111,7 @@ build_ticketsService:
     - docker push $IMAGE_NAME:ticketsService
   only:
     - main
-Khai báo các bước deploy cho từng service
+# Khai báo các bước deploy cho từng service
 deploy_passengersService:
   extends:
     - .deploy_template
