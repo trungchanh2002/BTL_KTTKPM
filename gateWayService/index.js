@@ -25,11 +25,16 @@ const handleProxyError = (err, req, res, target) => {
   res.status(500).send("Internal Server Error");
 };
 
-app.use("/service1", limiter, middleware.verifyToken, (req, res) => {
-  proxy.web(req, res, { target: process.env.PASSENGERS_URL }, (err) =>
-    handleProxyError(err, req, res, process.env.PASSENGERS_URL)
-  );
-});
+app.use(
+  "/service1",
+  limiter.clientLimiter,
+  middleware.verifyToken,
+  (req, res) => {
+    proxy.web(req, res, { target: process.env.PASSENGERS_URL }, (err) =>
+      handleProxyError(err, req, res, process.env.PASSENGERS_URL)
+    );
+  }
+);
 
 app.use("/service2", middleware.verifyToken, (req, res) => {
   breaker
