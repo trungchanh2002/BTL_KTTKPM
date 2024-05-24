@@ -1,6 +1,7 @@
 variables:
   IMAGE_NAME: trungchanhdev/gitlab-cicd-app
   IMAGE_TAG: demo-cicd-app
+  DOCKER_HOST: tcp://docker:2375/
 
 stages:
   - test
@@ -21,17 +22,11 @@ stages:
 # Hàm build một service
 .build_template:
   stage: build
-  image: docker:20.10.16
+  image: docker:stable
   services:
-    - docker:docker:20.10.16-dind
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
+    - docker:dind
   before_script:
-    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
-  script:
-    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
-    - docker push "$IMAGE_NAME:$IMAGE_TAG"
-
+    - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
 # Khai báo các bước test cho từng service
 test_busesService:
   extends:
@@ -46,10 +41,9 @@ test_busesService:
 build_busesService:
   extends:
     - .build_template
-    - .cache_install
   script:
     - cd busesService
-    - npm install
-    - npm run build
+    - docker build -t trungchanhdev/gitlab-cicd-app:latest .
+    - docker push trungchanhdev/gitlab-cicd-app:latest
   only:
     - main
