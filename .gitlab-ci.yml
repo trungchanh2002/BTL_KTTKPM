@@ -75,6 +75,15 @@ test_ticketsService:
     - npm test
   only:
     - main
+test_gateWayService:
+  extends:
+    - .test_template
+  script:
+    - cd gateWayService
+    - npm install
+    - npm test
+  only:
+    - main
 # Khai báo các bước build cho từng service
 build_passengersService:
   extends:
@@ -121,6 +130,15 @@ build_ticketsService:
     - docker push $IMAGE_NAME:ticketsService
   only:
     - main
+build_gateWayService:
+  extends:
+    - .build_template
+  script:
+    - cd gateWayService
+    - docker build -t $IMAGE_NAME:gateWayService .
+    - docker push $IMAGE_NAME:gateWayService
+  only:
+    - main
 # Khai báo các bước deploy cho từng service
 deploy_passengersService:
   extends:
@@ -157,5 +175,12 @@ deploy_ticketsService:
     - .deploy_template
   script:
     - cd ticketsService
+  only:
+    - main
+deploy_gateWayService:
+  extends:
+    - .deploy_template
+  script:
+    - cd gateWayService
   only:
     - main
