@@ -11,8 +11,31 @@ pipeline {
         RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
     }
-
+    
     stages {
+        stage('Prepare Environment') {
+            steps {
+                withCredentials([file(credentialsId: 'envGateway', variable: 'ENV_FILE_GATEWAY')]) {
+                    sh 'cp $ENV_FILE_GATEWAY gatewayService/.env'
+                }
+                withCredentials([file(credentialsId: 'envCar', variable: 'ENV_FILE_CAR')]) {
+                    sh 'cp $ENV_FILE_CAR carsService/.env'
+                }
+                withCredentials([file(credentialsId: 'envDriver', variable: 'ENV_FILE_DRIVER')]) {
+                    sh 'cp $ENV_FILE_DRIVER driverService/.env'
+                }
+                withCredentials([file(credentialsId: 'envHistory', variable: 'ENV_FILE_HISTORY')]) {
+                    sh 'cp $ENV_FILE_HISTORY historydriversService/.env'
+                }
+                withCredentials([file(credentialsId: 'envTripDriver', variable: 'ENV_FILE_TRIPDRIVER')]) {
+                    sh 'cp $ENV_FILE_TRIPDRIVER tripdriversService/.env'
+                }
+                withCredentials([file(credentialsId: 'envTrip', variable: 'ENV_FILE_TRIP')]) {
+                    sh 'cp $ENV_FILE_TRIP tripService/.env'
+                }
+            }
+        }
+
         stage('Build and Push Docker Images') {
             parallel {
                 stage('Build Buses Service') {
