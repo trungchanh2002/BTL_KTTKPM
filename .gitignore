@@ -1,3 +1,4 @@
+cmd.txt
 .env
 node_modules/
-cmd.txt
+package-lock.json

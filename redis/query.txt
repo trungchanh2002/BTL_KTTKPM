@@ -1,5 +1,0 @@
-redis-cli
-KEYS *
-GET name
-DEL name
-FLUSHDB //Xóa tất cả db
