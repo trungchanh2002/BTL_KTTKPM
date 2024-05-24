@@ -1,6 +1,8 @@
 # Hệ Thống Quản Lý và Bán Vé Xe Bus
 
-![Mô hình kiến trúc hạ tầng MVC](https://github.com/trungchanh2002/BTL_KTTKPM/blob/main/images/Duy_Chanh_PP.png)
+## GitLab
+
+[Link GitLab](https://gitlab.com/trungchanh.kda/btl_kttkpm)
 
 ## Giới Thiệu
 
