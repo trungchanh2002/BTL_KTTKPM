@@ -13,6 +13,29 @@ pipeline {
     }
     
     stages {
+        stage('Prepare Environment') {
+            steps {
+                withCredentials([file( variable: 'ENV_FILE_GATEWAY')]) {
+                    sh 'cp $ENV_FILE_GATEWAY gatewayService/.env'
+                }
+                withCredentials([file(variable: 'ENV_FILE_BUS')]) {
+                    sh 'cp $ENV_FILE_BUS busesService/.env'
+                }
+                withCredentials([file( variable: 'ENV_FILE_DRIVER')]) {
+                    sh 'cp $ENV_FILE_DRIVER driversService/.env'
+                }
+                withCredentials([file(variable: 'ENV_FILE_PASSENGER')]) {
+                    sh 'cp $ENV_FILE_PASSENGER passengersService/.env'
+                }
+                withCredentials([file(variable: 'ENV_FILE_TICKET')]) {
+                    sh 'cp $ENV_FILE_TICKET ticketsService/.env'
+                }
+                withCredentials([file(variable: 'ENV_FILE_ROUTE')]) {
+                    sh 'cp $ENV_FILE_ROUTE routesService/.env'
+                }
+            }
+        }
+
         
         stage('Build and Push Docker Images') {
             parallel {
