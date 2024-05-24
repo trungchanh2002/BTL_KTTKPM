@@ -1,13 +1,13 @@
+# Khai báo các biến môi trường
 variables:
   IMAGE_NAME: trungchanhdev/gitlab-cicd-app
+  TAG_NAME: demo-app
   DOCKER_HOST: tcp://docker:2375/
-
 # Cac stage chinh
 stages:
   - test
   - build
   - deploy
-
 # Hàm kiểm tra một service
 .test_template:
   stage: test
@@ -71,8 +71,8 @@ build_passengersService:
     - .build_template
   script:
     - cd passengersService
-    - docker build -t $IMAGE_NAME:passengersService .
-    - docker push $IMAGE_NAME:passengersService
+    - docker build -t $IMAGE_NAME:$TAG_NAME .
+    - docker push $IMAGE_NAME:$TAG_NAME
   only:
     - main
 build_busesService:
@@ -80,44 +80,44 @@ build_busesService:
     - .build_template
   script:
     - cd busesService
-    - docker build -t $IMAGE_NAME:busesSservice .
-    - docker push $IMAGE_NAME:busesSservice
+    - docker build -t $IMAGE_NAME:$TAG_NAME .
+    - docker push $IMAGE_NAME:$TAG_NAME
   only:
     - main
-build_driversService:
-  extends:
-    - .build_template
-  script:
-    - cd driversService
-    - docker build -t $IMAGE_NAME:driversService .
-    - docker push $IMAGE_NAME:driversService
-  only:
-    - main
-build_routesService:
-  extends:
-    - .build_template
-  script:
-    - cd routesService
-    - docker build -t $IMAGE_NAME:routesService .
-    - docker push $IMAGE_NAME:routesService
-  only:
-    - main
-build_ticketsService:
-  extends:
-    - .build_template
-  script:
-    - cd ticketsService
-    - docker build -t $IMAGE_NAME:ticketsService .
-    - docker push $IMAGE_NAME:ticketsService
-  only:
-    - main
+# build_driversService:
+#   extends:
+#     - .build_template
+#   script:
+#     - cd driversService
+#     - docker build -t $IMAGE_NAME:driversService .
+#     - docker push $IMAGE_NAME:driversService
+#   only:
+#     - main
+# build_routesService:
+#   extends:
+#     - .build_template
+#   script:
+#     - cd routesService
+#     - docker build -t $IMAGE_NAME:routesService .
+#     - docker push $IMAGE_NAME:routesService
+#   only:
+#     - main
+# build_ticketsService:
+#   extends:
+#     - .build_template
+#   script:
+#     - cd ticketsService
+#     - docker build -t $IMAGE_NAME:ticketsService .
+#     - docker push $IMAGE_NAME:ticketsService
+#   only:
+#     - main
 #Khai báo các bước deploy cho từng service
-deploy_passengersService:
-  extends:
-    - .deploy_template
-  script:
-    - cd passengersService
-    - docker pull $IMAGE_NAME:passengersService
-    - docker run -d -p 80:80 $IMAGE_NAME:passengersService
-  only:
-    - main
+# deploy_passengersService:
+#   extends:
+#     - .deploy_template
+#   script:
+#     - cd passengersService
+#     - docker pull $IMAGE_NAME:passengersService
+#     - docker run -d -p 80:80 $IMAGE_NAME:passengersService
+#   only:
+#     - main
