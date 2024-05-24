@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 # Đường dẫn tới thư mục làm việc
 WORKDIR /the/workdir/path
 # Copy file package.json và package-lock.json vào thư mục làm việc
