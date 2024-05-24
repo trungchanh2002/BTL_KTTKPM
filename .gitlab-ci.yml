@@ -30,11 +30,11 @@ stages:
   before_script:
     - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
 # Khai báo các bước test cho từng service
-test_passengerService:
+test_passengersService:
   extends:
     - .test_template
   script:
-    - cd passengerService
+    - cd passengersService
     - npm install
     - npm test
 test_busesService:
@@ -66,13 +66,13 @@ test_ticketsService:
     - npm install
     - npm test
 # Khai báo các bước build cho từng service
-build_passengerService:
+build_passengersService:
   extends:
     - .build_template
   script:
-    - cd passengerService
-    - docker build -t $IMAGE_NAME:passengerService .
-    - docker push $IMAGE_NAME:passengerService
+    - cd passengersService
+    - docker build -t $IMAGE_NAME:passengersService .
+    - docker push $IMAGE_NAME:passengersService
   only:
     - main
 build_busesService:
@@ -112,12 +112,12 @@ build_ticketsService:
   only:
     - main
 #Khai báo các bước deploy cho từng service
-deploy_passengerService:
+deploy_passengersService:
   extends:
     - .deploy_template
   script:
-    - cd passengerService
-    - docker pull $IMAGE_NAME:passengerService
-    - docker run -d -p 80:80 $IMAGE_NAME:passengerService
+    - cd passengersService
+    - docker pull $IMAGE_NAME:passengersService
+    - docker run -d -p 80:80 $IMAGE_NAME:passengersService
   only:
     - main
