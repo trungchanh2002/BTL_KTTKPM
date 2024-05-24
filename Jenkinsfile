@@ -15,89 +15,17 @@ pipeline {
     stages {   
         stage('Build and Push Docker Images') {
             parallel {
-                stage('Build Buses Service') {
-                    steps {
-                        script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                     // some block
-                
-                                docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
-                            }
-                        }
-                    }
-                }
                 stage('Build Drivers Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
+                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                            sh 'cd driversService && docker build -t $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
+                            sh 'docker push $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG'
                             }
                         }
                     }
                 }
-                stage('Build Tickets Service') {
-                    steps {
-                        script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-                                docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
-                            }
-                        }
-                    }
-                }
-                stage('Build Routes Service') {
-                    steps {
-                        script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
-                            }
-                        }
-                    }
-                }
-                stage('Build Passengers Service') {
-                    steps {
-                        script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
-                            }
-                        }
-                    }
-                }
-                stage('Build Gateway Service') {
-                    steps {
-                        script {
-                           // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
-                            }
-                        }
-                    }
-                }
-                stage('Build Retry Service') {
-                    steps {
-                        script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-    // some block
-
-                                docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
-                            }
-                        }
-                    }
-                }
+                
             }
         }
         stage('Deploy') {
