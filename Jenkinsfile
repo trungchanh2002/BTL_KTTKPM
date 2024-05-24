@@ -10,47 +10,30 @@ pipeline {
         GATEWAY_SERVICE_IMAGE_NAME = 'btl_kttkpm-gateway-service'
         RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
+        DOCKER_HUB_CREDS_ID = 'dockerhub'
+        DOCKER_USERNAME = 'duy19102018@gmail.com'
+        DOCKER_PASSWORD = '0793427848Duyne'
     }
     
     stages {   
         stage('Build and Push Docker Images') {
             parallel {
-                stage('Build Drivers Service') {
-                    steps {
-                        script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd driversService && docker build -t ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
-                            }
-                        }
-                    }
-                }
-                stage('Build Passengers Service') {
-                    steps {
-                        script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd passengersService && docker build -t ${env.PASSENGERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.PASSENGERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
-                            }
-                        }
-                    }
-                }
                 stage('Build Buses Service') {
                     steps {
                         script {
+                            // This step should not normally be used in your script. Consult the inline help for details.
                             withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd busesService && docker build -t ${env.BUSES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.BUSES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
+                    
+                                docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
                             }
                         }
                     }
                 }
-                stage('Build Routes Service') {
+                stage('Build Drivers Service') {
                     steps {
                         script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd routesService && docker build -t ${env.ROUTES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.ROUTES_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
                             }
                         }
                     }
@@ -59,8 +42,25 @@ pipeline {
                     steps {
                         script {
                             withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd ticketsService && docker build -t ${env.TICKETS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.TICKETS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
+                                docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Routes Service') {
+                    steps {
+                        script {
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Passengers Service') {
+                    steps {
+                        script {
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
                             }
                         }
                     }
@@ -68,9 +68,8 @@ pipeline {
                 stage('Build Gateway Service') {
                     steps {
                         script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd gatewayService && docker build -t ${env.GATEWAY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.GATEWAY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
                             }
                         }
                     }
@@ -78,9 +77,8 @@ pipeline {
                 stage('Build Retry Service') {
                     steps {
                         script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                sh "cd retryService && docker build -t ${env.RETRY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
-                                sh "docker push ${env.RETRY_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
                             }
                         }
                     }
