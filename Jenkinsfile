@@ -11,21 +11,15 @@ pipeline {
         RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
     }
-    
     stages {   
         stage('Build and Push Docker Images') {
-            parallel {
-                stage('Build Drivers Service') {
-                    steps {
-                        script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                            sh 'cd driversService && docker build -t $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG .'
-                            sh 'docker push $DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG'
-                            }
-                        }
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                        sh "cd driversService && docker build -t ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG} ."
+                        sh "docker push ${env.DRIVERS_SERVICE_IMAGE_NAME}:${env.IMAGE_TAG}"
                     }
                 }
-                
             }
         }
         stage('Deploy') {
