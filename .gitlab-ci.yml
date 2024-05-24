@@ -145,8 +145,8 @@ deploy_passengersService:
     - .deploy_template
   script:
     - cd passengersService
-    - docker pull $IMAGE_NAME:passengersService
-    - docker run -d -p 80:80 $IMAGE_NAME:passengersService
+    # - docker pull $IMAGE_NAME:passengersService
+    # - docker run -d -p 80:80 $IMAGE_NAME:passengersService
   only:
     - chanh
 deploy_busesService:
@@ -161,8 +161,8 @@ deploy_driversService:
     - .deploy_template
   script:
     - cd driversService
-    - docker pull $IMAGE_NAME:driversService
-    - docker run -d -p 80:80 $IMAGE_NAME:driversService
+    # - docker pull $IMAGE_NAME:driversService
+    # - docker run -d -p 80:80 $IMAGE_NAME:driversService
   only:
     - chanh
 deploy_routesService:
