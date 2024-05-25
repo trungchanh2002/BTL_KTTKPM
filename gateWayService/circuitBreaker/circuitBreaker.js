@@ -32,20 +32,17 @@ breaker.on("timeout", () => console.log("Yêu cầu vượt quá thời gian ch�
 // Xử lý sự kiện "open" của Circuit Breaker
 breaker.on("open", () => {
   console.log("breaker đã mở");
-  console.log("Sử dụng phương pháp dự phòng");
-  // Gọi hàm dự phòng ở đây
   yourFallbackFunction();
 });
 // Xử lý sự kiện "failure" của Circuit Breaker
 breaker.on("failure", () => {
   console.log("Yêu cầu thất bại");
-  console.log("Sử dụng phương pháp dự phòng");
   // Gọi hàm dự phòng ở đây
   yourFallbackFunction();
 });
 // Hàm thực hiện chức năng dự phòng
 function yourFallbackFunction() {
-  console.log("Sử dụng chức năng dự phòng");
+  console.log("Đang sử dụng chức năng dự phòng");
 }
 
 module.exports = breaker;
