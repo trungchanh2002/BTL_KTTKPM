@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const ip = process.env.IP;
 const port = process.env.PORT;
+const IP_GATEWAY = process.env.IP_GATEWAY;
 
 // Hàm delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,8 +28,9 @@ const callApiWithRetry = async (url, options, retries = 5) => {
 };
 // Middleware để áp dụng retry cho tất cả các API từ gateway
 app.use(async (req, res, next) => {
-  const gatewayUrl = `http://${ip}:3000` + req.url;
-  console.log(`Retry: ${gatewayUrl}`);
+  const gatewayUrl = `${IP_GATEWAY}` + req.url;
+  // console.log(gatewayUrl);
+  console.log("Đang thực hiện retry dữ liệu...");
   const options = {
     method: req.method,
     headers: req.headers,
@@ -43,7 +45,6 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Endpoint mặc định
 app.get("/", (req, res) => {
   res.send("Retry API is running");
 });
