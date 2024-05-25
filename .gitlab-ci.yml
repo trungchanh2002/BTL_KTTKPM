@@ -1,186 +1,57 @@
-# Khai báo các biến môi trường
 variables:
-  IMAGE_NAME: trungchanhdev/gitlab-cicd-app
-  TAG_NAME: demo-app
-  DOCKER_HOST: tcp://docker:2375/
-# Cac stage chinh
+  DOCKER_DRIVER: overlay2
+  IMGAGE_NAME: trungchanhdev/gitlab-cicd-app
+  USER_NAME: trungchanhdev
+  DOCKER_HOST: tcp://docker:2375
+  PASSWORD: Mbappe2024_
+
+image: docker/compose:1.29.2
+
+services:
+  - docker:dind
+
 stages:
   - test
   - build
+  - push
   - deploy
-# Hàm kiểm tra một service
-.test_template:
+
+before_script:
+  - echo $PASSWORD | docker login -u $USER_NAME --password-stdin
+
+# Test the project
+test-project:
   stage: test
-  image: node:20-alpine
   script:
-    - npm test
-# Hàm build một service
-.build_template:
+    - echo "Testing the project..."
+  only:
+    - chanh
+
+# Build Docker image
+build-docker-image:
   stage: build
-  image: docker:stable
-  services:
-    - docker:dind
-  before_script:
-    - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
-.deploy_template:
+  script:
+    - docker-compose -f "docker-compose.yaml" up -d --build
+    - docker tag mongodb/mongodb-enterprise-server:latest trungchanhdev/gitlab-cicd-app:mongodb
+    - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
+    - docker push trungchanhdev/gitlab-cicd-app:mongodb
+    - docker push trungchanhdev/gitlab-cicd-app:redis
+    - docker-compose -f "docker-compose.yaml" push
+  only:
+    - chanh
+
+# Push to Docker Hub
+push-docker-hub:
+  stage: push
+  script:
+    - echo "Pushing the Docker image to Docker Hub..."
+  only:
+    - chanh
+
+# Deploy to Docker Hub
+deploy-ec2-instance:
   stage: deploy
-  image: docker:stable
-  services:
-    - docker:dind
-  before_script:
-    - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
-# Khai báo các bước test cho từng service
-test_passengersService:
-  extends:
-    - .test_template
   script:
-    - cd passengersService
-    - npm install
-    - npm test
+    - echo "Deloy app to EC2 instance"
   only:
-    - main
-test_busesService:
-  extends:
-    - .test_template
-  script:
-    - cd busesService
-    - npm install
-    - npm test
-  only:
-    - main
-test_driversService:
-  extends:
-    - .test_template
-  script:
-    - cd driversService
-    - npm install
-    - npm test
-  only:
-    - main
-test_routesService:
-  extends:
-    - .test_template
-  script:
-    - cd routesService
-    - npm install
-    - npm test
-  only:
-    - main
-test_ticketsService:
-  extends:
-    - .test_template
-  script:
-    - cd ticketsService
-    - npm install
-    - npm test
-  only:
-    - main
-test_gateWayService:
-  extends:
-    - .test_template
-  script:
-    - cd gateWayService
-    - npm install
-    - npm test
-  only:
-    - main
-# Khai báo các bước build cho từng service
-build_passengersService:
-  extends:
-    - .build_template
-  script:
-    - cd passengersService
-    - docker build -t $IMAGE_NAME:passengersService .
-    - docker push $IMAGE_NAME:passengersService
-  only:
-    - main
-build_busesService:
-  extends:
-    - .build_template
-  script:
-    - cd busesService
-    - docker build -t $IMAGE_NAME:busesService .
-    - docker push $IMAGE_NAME:busesService
-  only:
-    - main
-build_driversService:
-  extends:
-    - .build_template
-  script:
-    - cd driversService
-    - docker build -t $IMAGE_NAME:driversService .
-    - docker push $IMAGE_NAME:driversService
-  only:
-    - main
-build_routesService:
-  extends:
-    - .build_template
-  script:
-    - cd routesService
-    - docker build -t $IMAGE_NAME:routesService .
-    - docker push $IMAGE_NAME:routesService
-  only:
-    - main
-build_ticketsService:
-  extends:
-    - .build_template
-  script:
-    - cd ticketsService
-    - docker build -t $IMAGE_NAME:ticketsService .
-    - docker push $IMAGE_NAME:ticketsService
-  only:
-    - main
-build_gateWayService:
-  extends:
-    - .build_template
-  script:
-    - cd gateWayService
-    - docker build -t $IMAGE_NAME:gateWayService .
-    - docker push $IMAGE_NAME:gateWayService
-  only:
-    - main
-# Khai báo các bước deploy cho từng service
-deploy_passengersService:
-  extends:
-    - .deploy_template
-  script:
-    - cd passengersService
-    # - docker pull $IMAGE_NAME:passengersService
-    # - docker run -d -p 80:80 $IMAGE_NAME:passengersService
-  only:
-    - main
-deploy_busesService:
-  extends:
-    - .deploy_template
-  script:
-    - cd busesService
-  only:
-    - main
-deploy_driversService:
-  extends:
-    - .deploy_template
-  script:
-    - cd driversService
-  only:
-    - main
-deploy_routesService:
-  extends:
-    - .deploy_template
-  script:
-    - cd routesService
-  only:
-    - main
-deploy_ticketsService:
-  extends:
-    - .deploy_template
-  script:
-    - cd ticketsService
-  only:
-    - main
-deploy_gateWayService:
-  extends:
-    - .deploy_template
-  script:
-    - cd gateWayService
-  only:
-    - main
+    - chanh

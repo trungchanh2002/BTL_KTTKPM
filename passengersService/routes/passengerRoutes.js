@@ -4,7 +4,7 @@ const passengerController = require("../controllers/passengerController");
 const middlewareController = require("../middlewares/middlewareController");
 
 // http://localhost:3001/api/v1/passengers/getAllPassengers
-router.get("/getAllPassengers", middlewareController.verifyTokenAuth, passengerController.getAllPassengers);
+router.get("/getAllPassengers", middlewareController.verifyTokenUser, passengerController.getAllPassengers);
 // http://localhost:3001/api/v1/passengers/getPassengerById/664c48537766b84903d71c38
 router.get("/getPassengerById/:id", passengerController.getPassengerById);
 // http://localhost:3001/api/v1/passengers/login

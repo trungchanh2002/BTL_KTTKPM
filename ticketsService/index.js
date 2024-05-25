@@ -22,8 +22,9 @@ app.use(express.json());
 app.use(cors());
 
 // database connection
+const dbURI = process.env.MONGODB_URI;
 mongoose
-  .connect(mongodb)
+  .connect(dbURI)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -39,7 +40,5 @@ app.use(function (req, res) {
 
 // Bắt đầu server và lắng nghe các kết nối tới
 server.listen(port, ip, () => {
-  console.log("Server is running on IP: " + ip);
-  console.log("Server is running on PORT: " + port);
-  console.log("Server is running on DB: " + mongodb);
+  console.log(`Server is running on: ${ip}:${port}`);
 });
