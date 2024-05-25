@@ -15,8 +15,10 @@ stages:
   - build
   - push
   - deploy
+
 before_script:
   - echo $PASSWORD | docker login -u $USER_NAME --password-stdin
+
 # Test the project
 test-project:
   stage: test
@@ -24,6 +26,7 @@ test-project:
     - echo "Testing the project..."
   only:
     - chanh
+
 # Build Docker image
 build-docker-image:
   stage: build
@@ -33,15 +36,18 @@ build-docker-image:
     - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
     - docker push trungchanhdev/gitlab-cicd-app:mongodb
     - docker push trungchanhdev/gitlab-cicd-app:redis
+    - docker-compose -f "docker-compose.yaml" push
   only:
     - chanh
+
 # Push to Docker Hub
 push-docker-hub:
   stage: push
   script:
-    - docker-compose -f "docker-compose.yaml" push
+    - echo "Pushing the Docker image to Docker Hub..."
   only:
     - chanh
+
 # Deploy to Docker Hub
 deploy-ec2-instance:
   stage: deploy
