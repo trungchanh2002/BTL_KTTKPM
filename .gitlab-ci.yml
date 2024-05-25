@@ -15,37 +15,35 @@ stages:
   - build
   - push
   - deploy
-
 before_script:
   - echo $PASSWORD | docker login -u $USER_NAME --password-stdin
-
 # Test the project
-test:
+test-project:
   stage: test
   script:
     - echo "Testing the project..."
   only:
     - chanh
 # Build Docker image
-build:
+build-docker-image:
   stage: build
   script:
     - docker-compose -f "docker-compose.yaml" up -d --build
-  only:
-    - chanh
-# Push to Docker Hub
-push:
-  stage: push
-  script:
     - docker tag mongodb/mongodb-enterprise-server:latest trungchanhdev/gitlab-cicd-app:mongodb
     - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
     - docker push trungchanhdev/gitlab-cicd-app:mongodb
     - docker push trungchanhdev/gitlab-cicd-app:redis
+  only:
+    - chanh
+# Push to Docker Hub
+push-docker-hub:
+  stage: push
+  script:
     - docker-compose -f "docker-compose.yaml" push
   only:
     - chanh
 # Deploy to Docker Hub
-deploy:
+deploy-ec2-instance:
   stage: deploy
   script:
     - echo "Deloy app to EC2 instance"
