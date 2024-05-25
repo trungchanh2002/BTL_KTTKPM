@@ -15,11 +15,7 @@ const getAllBuses = async (req, res) => {
 const getBusById = async (req, res) => {
   const { id } = req.params;
   try {
-    const bus = await Bus.findById(id).populate({
-      path: "drivers",
-      model: "Driver",
-    });
-
+    const bus = await Bus.findById(id);
     if (!bus) {
       return res.status(404).json({ error: "Bus not found" });
     }

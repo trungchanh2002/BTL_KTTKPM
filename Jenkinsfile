@@ -2,22 +2,83 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-        DOCKER_CREDENTIALS_ID = 'docker'
+        BUSES_SERVICE_IMAGE_NAME = 'btl_kttkpm-buses-service'
+        DRIVERS_SERVICE_IMAGE_NAME = 'btl_kttkpm-drivers-service'
+        TICKETS_SERVICE_IMAGE_NAME = 'btl_kttkpm-tickets-service'
+        ROUTES_SERVICE_IMAGE_NAME = 'btl_kttkpm-routes-service'
+        PASSENGERS_SERVICE_IMAGE_NAME = 'btl_kttkpm-passengers-service'
+        GATEWAY_SERVICE_IMAGE_NAME = 'btl_kttkpm-gateway-service'
+        RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
         IMAGE_TAG = 'latest'
     }
     
     stages {   
         stage('Build and Push Docker Images') {
-            steps {
-                script {
-                    buildAndPushDockerImage('busesService')
-                    buildAndPushDockerImage('driversService')
-                    buildAndPushDockerImage('ticketsService')
-                    buildAndPushDockerImage('routesService')
-                    buildAndPushDockerImage('passengersService')
-                    buildAndPushDockerImage('gateWayService')
-                    buildAndPushDockerImage('retryService')
+            parallel {
+                stage('Build Buses Service') {
+                    steps {
+                        script {
+                            // This step should not normally be used in your script. Consult the inline help for details.
+                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                    
+                                docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Drivers Service') {
+                    steps {
+                        script {
+                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Tickets Service') {
+                    steps {
+                        script {
+                       withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Routes Service') {
+                    steps {
+                        script {
+                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Passengers Service') {
+                    steps {
+                        script {
+                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Gateway Service') {
+                    steps {
+                        script {
+                         withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
+                            }
+                        }
+                    }
+                }
+                stage('Build Retry Service') {
+                    steps {
+                        script {
+                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                                docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -37,17 +98,3 @@ pipeline {
         }
     }
 }
-
-def buildAndPushDockerImage(serviceName) {
-    withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
-        try {
-            def image = docker.build("${serviceName.toLowerCase()}:${IMAGE_TAG}", "./${serviceName}")
-            image.push()
-            image.push('latest')
-        } catch (Exception e) {
-            echo "Failed to build and push ${serviceName}"
-            error "Build failed"
-        }
-    }
-}
-
