@@ -67,6 +67,7 @@ app.use("/service5", middleware.verifyToken, (req, res) => {
     handleProxyError(err, req, res, process.env.TICKETS_URL)
   );
 });
+
 app.listen(port, () => {
   console.log(`Server is running on: ${ip}:${port}`);
 });

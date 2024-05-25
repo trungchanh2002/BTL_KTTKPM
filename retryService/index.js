@@ -25,7 +25,6 @@ const callApiWithRetry = async (url, options, retries = 5) => {
     }
   }
 };
-// Xin chào Chánh
 // Middleware để áp dụng retry cho tất cả các API từ gateway
 app.use(async (req, res, next) => {
   const gatewayUrl = `http://${ip}:3000` + req.url;
