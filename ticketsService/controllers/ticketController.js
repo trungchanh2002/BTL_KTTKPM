@@ -16,10 +16,16 @@ const getAllTickets = async (req, res) => {
 const getTicketById = async (req, res) => {
   const { id } = req.params;
   try {
-    const ticket = await Ticket.findById(id);
+    const ticket = await Ticket.findById(id).populate({
+      path: "passenger_id", // Tên trường tham chiếu đến hành khách trong mô hình vé
+      model: Passenger, // Tên mô hình của hành khách
+      select: "_id name phone address",
+    });
+
     if (!ticket) {
       return res.status(404).json({ error: "Ticket not found" });
     }
+
     res.status(200).json(ticket);
   } catch (error) {
     console.error(error);
