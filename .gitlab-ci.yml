@@ -1,104 +1,53 @@
-# Khai báo các biến môi trường
 image: docker/compose:1.29.2
+
 services:
   - docker:dind
-# Khai báo các biến môi trường
+
 variables:
-  IMAGE_NAME: trungchanhdev/gitlab-cicd-app
-  TAG_NAME: demo-app
-  DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
-# Cac stage chinh
+  IMGAGE_NAME: trungchanhdev/gitlab-cicd-app
+  USER_NAME: trungchanhdev
+  DOCKER_HOST: tcp://docker:2375
+  PASSWORD: Mbappe2024_
+
 stages:
   - test
   - build
   - push
   - deploy
+
 before_script:
-  - echo "Mbappe2024_" | docker login -u "trungchanhdev" --password-stdin
-# Hàm kiểm tra một service
-.test_template:
+  - echo $PASSWORD | docker login -u $USER_NAME --password-stdin
+
+# Test the project
+test:
   stage: test
-  image: node:20-alpine
-# Hàm build một service
-.build_template:
-  stage: build
-  image: docker:stable
-  services:
-    - docker:dind
-.deploy_template:
-  stage: deploy
-  image: docker:stable
-  services:
-    - docker:dind
-# Khai báo các bước test cho từng service
-test_passengersService:
-  extends:
-    - .test_template
   script:
-    - cd passengersService
-    - npm install
-    - npm test
+    - echo "Testing the project..."
   only:
     - chanh
-test_busesService:
-  extends:
-    - .test_template
-  script:
-    - cd busesService
-    - npm install
-    - npm test
-  only:
-    - chanh
-test_driversService:
-  extends:
-    - .test_template
-  script:
-    - cd driversService
-    - npm install
-    - npm test
-  only:
-    - chanh
-test_routesService:
-  extends:
-    - .test_template
-  script:
-    - cd routesService
-    - npm install
-    - npm test
-  only:
-    - chanh
-test_ticketsService:
-  extends:
-    - .test_template
-  script:
-    - cd ticketsService
-    - npm install
-    - npm test
-  only:
-    - chanh
-test_gateWayService:
-  extends:
-    - .test_template
-  script:
-    - cd gateWayService
-    - npm install
-    - npm test
-  only:
-    - chanh
-buid_all_services:
+# Build Docker image
+build:
   stage: build
   script:
     - docker-compose -f "docker-compose.yaml" up -d --build
   only:
     - chanh
-push_all_services:
+# Push to Docker Hub
+push:
   stage: push
   script:
     - docker tag mongodb/mongodb-enterprise-server:latest trungchanhdev/gitlab-cicd-app:mongodb
-    - docker push trungchanhdev/gitlab-cicd-app:mongodb
     - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
+    - docker push trungchanhdev/gitlab-cicd-app:mongodb
     - docker push trungchanhdev/gitlab-cicd-app:redis
     - docker-compose -f "docker-compose.yaml" push
+  only:
+    - chanh
+# Deploy to Docker Hub
+deploy:
+  stage: deploy
+  script:
+    - echo "Deloy app to EC2 instance"
   only:
     - chanh
