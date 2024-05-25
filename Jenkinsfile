@@ -41,7 +41,7 @@ pipeline {
 def buildAndPushDockerImage(serviceName) {
     withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
         try {
-            def image = docker.build("${serviceName}:${IMAGE_TAG}", "./${serviceName}")
+            def image = docker.build("${serviceName.toLowerCase()}:${IMAGE_TAG}", "./${serviceName}")
             image.push()
             image.push('latest')
         } catch (Exception e) {
@@ -50,3 +50,4 @@ def buildAndPushDockerImage(serviceName) {
         }
     }
 }
+
