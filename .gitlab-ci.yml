@@ -31,8 +31,6 @@ test-project:
 build-docker-image:
   stage: build
   script:
-    - docker-compose -f "docker-compose.yaml" up -d --build
-    - docker tag mongodb/mongodb-enterprise-server:latest trungchanhdev/gitlab-cicd-app:mongodb
     - docker tag redis:latest trungchanhdev/gitlab-cicd-app:redis
     - docker push trungchanhdev/gitlab-cicd-app:mongodb
     - docker push trungchanhdev/gitlab-cicd-app:redis
