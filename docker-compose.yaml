@@ -42,8 +42,8 @@ services:
       PASSENGERS_URL: "http://passengers-service:3001"
       BUSES_URL: "http://buses-service:3002"
       DRIVERS_URL: "http://drivers-service:3003"
-      ROUTES: "http://routes-service:3004"
-      TICKETS_URL: "http://tickers-service:3005"
+      ROUTES_URL: "http://routes-service:3004"
+      TICKETS_URL: "http://tickets-service:3005"
       REDIS_HOST: redis
     ports:
       - "3000:3000"

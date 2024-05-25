@@ -11,10 +11,7 @@ RUN npm install -g nodemon
 COPY . .
 # Chạy lệnh build
 RUN chmod -R 755 /the/workdir/path
-# Mở cổng 3002
+# Mở cổng 3005
 EXPOSE 3005
 # Chạy ứng dụng
 CMD ["nodemon", "index.js"]
-
-# docker build --tag car-docker . 
-# docker run -p 3001:3001 -d car-docker

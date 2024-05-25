@@ -58,8 +58,8 @@ app.use("/service3", middleware.verifyToken, (req, res) => {
   );
 });
 app.use("/service4", middleware.verifyToken, (req, res) => {
-  proxy.web(req, res, { target: process.env.ROUTES }, (err) =>
-    handleProxyError(err, req, res, process.env.ROUTES)
+  proxy.web(req, res, { target: process.env.ROUTES_URL }, (err) =>
+    handleProxyError(err, req, res, process.env.ROUTES_URL)
   );
 });
 app.use("/service5", middleware.verifyToken, (req, res) => {
@@ -67,7 +67,6 @@ app.use("/service5", middleware.verifyToken, (req, res) => {
     handleProxyError(err, req, res, process.env.TICKETS_URL)
   );
 });
-
 app.listen(port, () => {
   console.log(`Server is running on: ${ip}:${port}`);
 });
