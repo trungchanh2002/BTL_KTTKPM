@@ -2,6 +2,8 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+        DOCKER_CREDENTIALS_ID = 'docker'
         BUSES_SERVICE_IMAGE_NAME = 'btl_kttkpm-buses-service'
         DRIVERS_SERVICE_IMAGE_NAME = 'btl_kttkpm-drivers-service'
         TICKETS_SERVICE_IMAGE_NAME = 'btl_kttkpm-tickets-service'
@@ -18,10 +20,13 @@ pipeline {
                 stage('Build Buses Service') {
                     steps {
                         script {
-                            // This step should not normally be used in your script. Consult the inline help for details.
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                    
-                                docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $BUSES_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -29,8 +34,13 @@ pipeline {
                 stage('Build Drivers Service') {
                     steps {
                         script {
-                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $DRIVERS_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -38,8 +48,13 @@ pipeline {
                 stage('Build Tickets Service') {
                     steps {
                         script {
-                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $TICKETS_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -47,8 +62,13 @@ pipeline {
                 stage('Build Routes Service') {
                     steps {
                         script {
-                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
+withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $ROUTES_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -56,8 +76,13 @@ pipeline {
                 stage('Build Passengers Service') {
                     steps {
                         script {
-                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $PASSENGERS_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -65,8 +90,13 @@ pipeline {
                 stage('Build Gateway Service') {
                     steps {
                         script {
-                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $GATEWAY_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -74,8 +104,13 @@ pipeline {
                 stage('Build Retry Service') {
                     steps {
                         script {
-                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
+                            withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID, url: DOCKER_REGISTRY) {
+                                try {
+                                    docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
+                                } catch (Exception e) {
+                                    echo "Failed to build and push $RETRY_SERVICE_IMAGE_NAME"
+                                    error "Build failed"
+                                }
                             }
                         }
                     }
@@ -94,7 +129,7 @@ pipeline {
     
     post {
         always {
-            cleanWs()
+cleanWs()
         }
     }
 }
