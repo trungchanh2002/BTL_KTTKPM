@@ -2,13 +2,12 @@ pipeline {
     agent any
 
     environment {
-        BUSES_SERVICE_IMAGE_NAME = 'btl_kttkpm-buses-service'
-        DRIVERS_SERVICE_IMAGE_NAME = 'btl_kttkpm-drivers-service'
-        TICKETS_SERVICE_IMAGE_NAME = 'btl_kttkpm-tickets-service'
-        ROUTES_SERVICE_IMAGE_NAME = 'btl_kttkpm-routes-service'
-        PASSENGERS_SERVICE_IMAGE_NAME = 'btl_kttkpm-passengers-service'
-        GATEWAY_SERVICE_IMAGE_NAME = 'btl_kttkpm-gateway-service'
-        RETRY_SERVICE_IMAGE_NAME = 'btl_kttkpm-retry-service'
+        BUSES_SERVICE_IMAGE_NAME = 'jenkins-buses-service'
+        DRIVERS_SERVICE_IMAGE_NAME = 'jenkins-drivers-service'
+        TICKETS_SERVICE_IMAGE_NAME = 'jenkins-tickets-service'
+        ROUTES_SERVICE_IMAGE_NAME = 'jenkins-routes-service'
+        PASSENGERS_SERVICE_IMAGE_NAME = 'jenkins-passengers-service'
+        GATEWAY_SERVICE_IMAGE_NAME = 'jenkins-gateway-service'
         IMAGE_TAG = 'latest'
     }
     
@@ -67,15 +66,6 @@ pipeline {
                         script {
                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
                                 docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
-                            }
-                        }
-                    }
-                }
-                stage('Build Retry Service') {
-                    steps {
-                        script {
-                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$RETRY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './retryService').push()
                             }
                         }
                     }
