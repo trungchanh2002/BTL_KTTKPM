@@ -9,6 +9,7 @@ pipeline {
         PASSENGERS_SERVICE_IMAGE_NAME = 'jenkins-passengers-service'
         GATEWAY_SERVICE_IMAGE_NAME = 'jenkins-gateway-service'
         IMAGE_TAG = 'latest'
+        NAME_SPACE = 'trungchanhdev/gitlab-cicd-app'
     }
     
     stages {   
@@ -19,7 +20,6 @@ pipeline {
                         script {
                             // This step should not normally be used in your script. Consult the inline help for details.
                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                    
                                 docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
                             }
                         }

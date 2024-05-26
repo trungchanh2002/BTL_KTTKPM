@@ -48,6 +48,51 @@ const getPassengerById = async (req, res) => {
   }
 };
 
+const updatePassenger = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, address } = req.body;
+  try {
+    const passenger = await Passenger.findById(id);
+    if (!passenger) {
+      return res.status(404).json({ error: "Passenger not found" });
+    }
+    passenger.name = name || passenger.name;
+    passenger.email = email || passenger.email;
+    passenger.phone = phone || passenger.phone;
+    passenger.address = address || passenger.address;
+    await passenger.save();
+    // Cập nhật dữ liệu trong Redis
+    let passengers = await redisClient.get(`passenger_${id}`);
+    if (!passengers) {
+      // Nếu không có trong Redis, tạo mới và lưu vào
+      passengers = await Passenger.find();
+      await redisClient.set(`passenger_${id}`, JSON.stringify(passengers), "EX", 3600);
+    }
+    res.status(200).json({ message: "Passenger updated successfully", passenger });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const deletePassenger = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const passenger = await Passenger.findById(id);
+    if (!passenger) {
+      return res.status(404).json({ error: "Passenger not found" });
+    }
+    await passenger.deleteOne();
+    // Cập nhật dữ liệu trong Redis sau khi xóa thành công
+    const passengers = await Passenger.find();
+    await redisClient.set("passengers", JSON.stringify(passengers), "EX", 3600);
+    res.status(200).json({ message: "Passenger deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 const signup = async (req, res) => {
   const { username, password, role } = req.body;
   try {
@@ -108,25 +153,11 @@ const login = async (req, res) => {
   }
 };
 
-const deletePassenger = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const passenger = await Passenger.findById(id);
-    if (!passenger) {
-      return res.status(404).json({ error: "Passenger not found" });
-    }
-    await passenger.deleteOne();
-    res.status(200).json({ message: "Passenger deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
 module.exports = {
   getAllPassengers,
   getPassengerById,
   deletePassenger,
+  updatePassenger,
   login,
   signup,
 };

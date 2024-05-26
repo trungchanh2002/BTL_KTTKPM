@@ -13,4 +13,6 @@ router.post("/login", passengerController.login);
 router.post("/signup", passengerController.signup);
 // http://localhost:3001/api/v1/passengers/deletePassenger/664c48537766b84903d71c38
 router.post("/deletePassenger/:id", passengerController.deletePassenger);
+// http://localhost:3001/api/v1/passengers/updatePassenger
+router.post("/updatePassenger/:id", passengerController.updatePassenger);
 module.exports = router;
