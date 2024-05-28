@@ -20,7 +20,8 @@ pipeline {
                         script {
                             // This step should not normally be used in your script. Consult the inline help for details.
                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$BUSES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './busesService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './busesService').push()
+                                
                             }
                         }
                     }
@@ -29,7 +30,7 @@ pipeline {
                     steps {
                         script {
                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$DRIVERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './driversService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './driversService').push()
                             }
                         }
                     }
@@ -38,7 +39,7 @@ pipeline {
                     steps {
                         script {
                        withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$TICKETS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './ticketsService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './ticketsService').push()
                             }
                         }
                     }
@@ -47,7 +48,7 @@ pipeline {
                     steps {
                         script {
                           withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$ROUTES_SERVICE_IMAGE_NAME:$IMAGE_TAG", './routesService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './routesService').push()
                             }
                         }
                     }
@@ -56,7 +57,7 @@ pipeline {
                     steps {
                         script {
                            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$PASSENGERS_SERVICE_IMAGE_NAME:$IMAGE_TAG", './passengersService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './passengersService').push()
                             }
                         }
                     }
@@ -65,7 +66,7 @@ pipeline {
                     steps {
                         script {
                          withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                                docker.build("$GATEWAY_SERVICE_IMAGE_NAME:$IMAGE_TAG", './gateWayService').push()
+                                docker.build("$NAME_SPACE:$IMAGE_TAG", './gateWayService').push()
                             }
                         }
                     }

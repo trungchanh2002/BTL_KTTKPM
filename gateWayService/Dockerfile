@@ -16,5 +16,3 @@ EXPOSE 3000
 # Chạy ứng dụng
 CMD ["nodemon", "index.js"]
 
-# docker build --tag car-docker . 
-# docker run -p 3001:3001 -d car-docker
